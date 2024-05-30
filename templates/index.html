@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Itinerary Builder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shepherd_styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/css/shepherd.css">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>Travel Itinerary Builder</h1>
+    </div>
+</header>
+<div class="container">
+    <section id="itinerary-section">
+        <h2 style="color:black">My Itineraries</h2>
+        <button id="add-itinerary-btn">Add New Itinerary</button>
+        <ul id="itinerary-list">
+            {% for itinerary in itineraries %}
+            <li class="itinerary-item">
+                <a href="/itinerary/{{ itinerary._id }}">{{ itinerary.name }}</a>
+                <button class="edit-itinerary-btn" data-id="{{ itinerary._id }}"><i class="fas fa-edit"></i> Edit</button>
+                <button class="delete-itinerary-btn" data-id="{{ itinerary._id }}"><i class="fas fa-trash"></i> Delete</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/js/shepherd.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tour = new Shepherd.Tour({
+            defaultStepOptions: {
+                cancelIcon: {
+                    enabled: true
+                },
+                classes: 'shepherd-theme-arrows',
+                scrollTo: { behavior: 'smooth', block: 'center' }
+            }
+        });
+
+        tour.addStep({
+            id: 'itinerary-section',
+            text: 'Here are your saved itineraries. Click on any itinerary to view details.',
+            attachTo: {
+                element: '#itinerary-section',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'add-itinerary-btn',
+            text: 'Click here to add a new itinerary.',
+            attachTo: {
+                element: '#add-itinerary-btn',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+
+        tour.addStep({
+            id: 'edit-itinerary',
+            text: 'Click here to edit itinerary details.',
+            attachTo: {
+                element: '.edit-itinerary-btn',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'delete-itinerary',
+            text: 'Click here to delete this itinerary.',
+            attachTo: {
+                element: '.delete-itinerary-btn',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'End tour',
+                    action: tour.complete
+                }
+            ]
+        });
+
+        
+        tour.start();
+    });
+</script>
+</body>
+</html>

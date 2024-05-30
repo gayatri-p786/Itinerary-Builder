@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ itinerary.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/itinerary.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shepherd_styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/css/shepherd.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/js/shepherd.min.js"></script>
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>{{ itinerary.name }}</h1>
+    </div>
+</header>
+<div class="container">
+    <section id="itinerary-details">
+        <h2>Itinerary Details</h2>
+        <div class="details">
+            <h3>Destinations</h3>
+            <ul class="destinations">
+                {% for destination in itinerary.destinations %}
+                <li class="destination">
+                    <h4>{{ destination.name }}</h4>
+                    <ul class="activities">
+                        {% for activity in destination.activities %}
+                        <li>
+                            <input type="checkbox" id="activity-{{ loop.index }}" name="activity-{{ loop.index }}">
+                            <label for="activity-{{ loop.index }}">{{ activity }}</label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="back-to-list" onclick="window.location.href='/'">Back to Itineraries</button>
+    </section>
+</div>
+<!-- Shepherd Tour Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tour = new Shepherd.Tour({
+            defaultStepOptions: {
+                cancelIcon: {
+                    enabled: true
+                },
+                classes: 'shepherd-theme-arrows',
+                scrollTo: { behavior: 'smooth', block: 'center' }
+            }
+        });
+
+        tour.addStep({
+            id: 'destinations-step',
+            text: 'This is a list of destinations in your itinerary.',
+            attachTo: {
+                element: '.destinations',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'activities-step',
+            text: 'Here are the activities planned for each destination.',
+            attachTo: {
+                element: '.activities',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'check-off-step',
+            text: 'Check off activities as you complete them.',
+            attachTo: {
+                element: '#activity-1',
+                on: 'top'
+            },
+            buttons: [
+                {
+                    text: 'Finish',
+                    action: tour.complete
+                }
+            ]
+        });
+
+        tour.start();
+    });
+</script>
+</body>
+</html>

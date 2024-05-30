@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Itinerary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_itinerary.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shepherd_styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/css/shepherd.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/js/shepherd.min.js"></script>
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>Edit Itinerary</h1>
+    </div>
+</header>
+<div class="container">
+    <form id="edit-itinerary-form">
+        <input type="hidden" id="itinerary-id" name="id" value="{{ itinerary._id }}">
+        <input type="text" id="itinerary-name" name="name" placeholder="Itinerary Name" value="{{ itinerary.name }}" required>
+        <div id="destinations-container">
+            {% for destination in itinerary.destinations %}
+            <div class="destination">
+                <input type="text" class="destination-name" name="destination" placeholder="Destination Name" value="{{ destination.name }}" required>
+                <input type="text" class="activities" name="activities" placeholder="Activities (comma separated)" value="{{ ','.join(destination.activities) }}">
+                <button type="button" class="remove-destination"><i class="fas fa-times"></i></button>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-destination">Add Destination</button>
+        <button type="submit">Submit</button>
+        <button id="back-to-list" onclick="window.location.href='/'">Back to Itineraries</button>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/edit_itinerary.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tour = new Shepherd.Tour({
+            defaultStepOptions: {
+                cancelIcon: {
+                    enabled: true
+                },
+                classes: 'shepherd-theme-arrows',
+                scrollTo: { behavior: 'smooth', block: 'center' }
+            }
+        });
+
+        tour.addStep({
+            id: 'itinerary-name',
+            text: 'Edit the name of your itinerary here.',
+            attachTo: {
+                element: '#itinerary-name',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'destination-name',
+            text: 'Edit the name of a destination you want to visit.',
+            attachTo: {
+                element: '.destination-name',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'activities',
+            text: 'Edit activities for this destination, separated by commas.',
+            attachTo: {
+                element: '.activities',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'add-destination',
+            text: 'Click here to add another destination.',
+            attachTo: {
+                element: '#add-destination',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'Next',
+                    action: tour.next
+                }
+            ]
+        });
+
+        tour.addStep({
+            id: 'submit',
+            text: 'Click here to submit your edited itinerary.',
+            attachTo: {
+                element: 'button[type="submit"]',
+                on: 'bottom'
+            },
+            buttons: [
+                {
+                    text: 'End Tour',
+                    action: tour.complete
+                }
+            ]
+        });
+
+        tour.start();
+    });
+</script>
+</body>
+</html>
