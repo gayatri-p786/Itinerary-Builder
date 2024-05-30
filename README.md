@@ -68,7 +68,7 @@ The Travel Itinerary Management System utilizes Shepherd.js to provide a guided 
 
 ## Demo Video
 
-[Watch Demo Video](https://youtu.be/zNSAyJlz-L4)
+[![Watch the video](https://img.youtube.com/vi/zNSAyJlz-L4/0.jpg)](https://youtu.be/zNSAyJlz-L4)
 
 ## Screenshots
 
